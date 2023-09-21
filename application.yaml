@@ -1,0 +1,13 @@
+zeebe:
+  client:
+    broker:
+      exporters:
+        IncidentAlerter:
+          className: io.zeebe.IncidentAlerter
+          jarPath: lib/zeebe-incident-alerter-1.0-SNAPSHOT.jar
+          args:
+            url: https://webhook.site/0ba3d927-cb9c-4ba3-a740-f2b1bb92f97b
+
+
+
+

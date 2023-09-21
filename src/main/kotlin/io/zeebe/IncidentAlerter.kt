@@ -1,14 +1,21 @@
 package io.zeebe;
 
-import io.zeebe.exporter.api.Exporter
-import io.zeebe.exporter.api.context.Context
-import io.zeebe.exporter.api.context.Controller
-import io.zeebe.protocol.record.Record
-import io.zeebe.protocol.record.intent.IncidentIntent
+//import io.zeebe.exporter.api.Exporter
+//import io.zeebe.exporter.api.context.Context
+//import io.zeebe.exporter.api.context.Controller
+//import io.zeebe.protocol.record.Record
+//import io.zeebe.protocol.record.intent.IncidentIntent
+
+import RecordFilter
+import io.camunda.zeebe.exporter.api.Exporter
+import io.camunda.zeebe.exporter.api.context.Context
+import io.camunda.zeebe.exporter.api.context.Controller
+import io.camunda.zeebe.protocol.record.Record
+import io.camunda.zeebe.protocol.record.intent.IncidentIntent
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
-import org.slf4j.Logger
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.slf4j.Logger
 import java.io.IOException
 
 @Suppress("unused")
@@ -22,7 +29,8 @@ class IncidentAlerter: Exporter
     private lateinit var controller: Controller
 
     override fun configure(context: Context) {
-        val filter = RecordFilter()
+        log.info("inside the configure");
+        val filter = RecordFilter();
         context.setFilter(filter)
         this.log = context.logger
 
@@ -42,6 +50,7 @@ class IncidentAlerter: Exporter
     }
 
     override fun open(controller: Controller) {
+        log.info("inside the open");
         this.controller = controller
         log.info("Incident Alerter Exporter loaded")
 
@@ -49,9 +58,10 @@ class IncidentAlerter: Exporter
 
     override fun close() {}
 
-    override fun export(record: Record<*>) {
+    override fun export(record: Record<*>?) {
+        log.info("inside the export");
         try {
-            if (record.intent == IncidentIntent.CREATED) {
+            if (record?.intent == IncidentIntent.CREATED) {
                 log.info(record.toString())
                 postIncident(record)
             }
@@ -59,13 +69,17 @@ class IncidentAlerter: Exporter
                 log.error("Error thrown by Incident Exporter!")
                 e.printStackTrace()
         } finally {
-            this.controller.updateLastExportedRecordPosition(record.position)
+            if (record != null) {
+                this.controller.updateLastExportedRecordPosition(record.position)
+            }
         }
     }
+   // override fun export(record: java.lang.Record<*>?)
 
-    private fun postIncident(record: Record<*>) {
+    private fun postIncident(record: Record<*>?) {
+        log.info("inside the postIncident");
         val jSON = "application/json; charset=utf-8".toMediaType()
-        val body = record.toJson().toString().toRequestBody(jSON)
+        val body = record?.toJson().toString().toRequestBody(jSON);
         val rb = Request.Builder()
         if (token !== "") rb.addHeader("Authorization", "Bearer $token")
         val request = rb.url(url)
