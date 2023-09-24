@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1gk753u" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.13.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
+  <bpmn:process id="leave-wf" isExecutable="true">
+    <bpmn:extensionElements>
+      <zeebe:userTaskForm id="userTaskForm_22e5auu">{
+  "components": [
+    {
+      "values": [
+        {
+          "label": "Yes",
+          "value": "Yes"
+        },
+        {
+          "label": "No",
+          "value": "No"
+        }
+      ],
+      "label": "Manager Approval?",
+      "type": "radio",
+      "layout": {
+        "row": "Row_0qnrnkb",
+        "columns": null
+      },
+      "id": "Field_18cbkwd",
+      "key": "approve",
+      "defaultValue": "&lt;none&gt;"
+    }
+  ],
+  "type": "default",
+  "id": "Form_0817rc2",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.2.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.13.0"
+  },
+  "schemaVersion": 9
+}</zeebe:userTaskForm>
+      <zeebe:userTaskForm id="userTaskForm_2g5gsa4">{
+  "components": [
+    {
+      "values": [
+        {
+          "label": "Yes",
+          "value": "Yes"
+        },
+        {
+          "label": "No",
+          "value": "No"
+        }
+      ],
+      "label": "HR Approval",
+      "type": "radio",
+      "layout": {
+        "row": "Row_0v6orkb",
+        "columns": null
+      },
+      "id": "Field_1y0dup5",
+      "key": "hr_approval"
+    }
+  ],
+  "type": "default",
+  "id": "Form_14w9f1w",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.2.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.13.0"
+  },
+  "schemaVersion": 9
+}</zeebe:userTaskForm>
+    </bpmn:extensionElements>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1elrvlo</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Activity_00nya7u" name="Manager Approval">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_22e5auu" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_01760aa</bpmn:incoming>
+      <bpmn:outgoing>Flow_1u8nypx</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_175vksa" name="HR Approval">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_2g5gsa4" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1u8nypx</bpmn:incoming>
+      <bpmn:outgoing>Flow_197gsjn</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1u8nypx" sourceRef="Activity_00nya7u" targetRef="Activity_175vksa" />
+    <bpmn:endEvent id="Event_0m1hp1m">
+      <bpmn:incoming>Flow_0gri0cy</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Activity_0dr616h" name="Leave applied">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="leave_applied" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1elrvlo</bpmn:incoming>
+      <bpmn:outgoing>Flow_01760aa</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1elrvlo" sourceRef="StartEvent_1" targetRef="Activity_0dr616h" />
+    <bpmn:sequenceFlow id="Flow_01760aa" sourceRef="Activity_0dr616h" targetRef="Activity_00nya7u" />
+    <bpmn:serviceTask id="Activity_1b4hwcs" name="leave_applied_successfully">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="leave_applied_successfully" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_197gsjn</bpmn:incoming>
+      <bpmn:outgoing>Flow_0gri0cy</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_197gsjn" sourceRef="Activity_175vksa" targetRef="Activity_1b4hwcs" />
+    <bpmn:sequenceFlow id="Flow_0gri0cy" sourceRef="Activity_1b4hwcs" targetRef="Event_0m1hp1m" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="leave-wf">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="79" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0dr616h_di" bpmnElement="Activity_0dr616h">
+        <dc:Bounds x="270" y="170" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_00nya7u_di" bpmnElement="Activity_00nya7u">
+        <dc:Bounds x="430" y="180" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_175vksa_di" bpmnElement="Activity_175vksa">
+        <dc:Bounds x="590" y="180" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1b4hwcs_di" bpmnElement="Activity_1b4hwcs">
+        <dc:Bounds x="800" y="290" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0m1hp1m_di" bpmnElement="Event_0m1hp1m">
+        <dc:Bounds x="1142" y="292" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1elrvlo_di" bpmnElement="Flow_1elrvlo">
+        <di:waypoint x="215" y="97" />
+        <di:waypoint x="240" y="97" />
+        <di:waypoint x="240" y="210" />
+        <di:waypoint x="270" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01760aa_di" bpmnElement="Flow_01760aa">
+        <di:waypoint x="370" y="210" />
+        <di:waypoint x="400" y="210" />
+        <di:waypoint x="400" y="220" />
+        <di:waypoint x="430" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1u8nypx_di" bpmnElement="Flow_1u8nypx">
+        <di:waypoint x="530" y="220" />
+        <di:waypoint x="590" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_197gsjn_di" bpmnElement="Flow_197gsjn">
+        <di:waypoint x="690" y="220" />
+        <di:waypoint x="750" y="220" />
+        <di:waypoint x="750" y="330" />
+        <di:waypoint x="800" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0gri0cy_di" bpmnElement="Flow_0gri0cy">
+        <di:waypoint x="900" y="330" />
+        <di:waypoint x="1021" y="330" />
+        <di:waypoint x="1021" y="310" />
+        <di:waypoint x="1142" y="310" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
