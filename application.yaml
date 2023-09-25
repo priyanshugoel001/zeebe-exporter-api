@@ -1,13 +1,49 @@
 zeebe:
-  client:
-    broker:
-      exporters:
-        IncidentAlerter:
-          className: io.zeebe.IncidentAlerter
-          jarPath: lib/zeebe-incident-alerter-1.0-SNAPSHOT.jar
-          args:
-            url: https://webhook.site/0ba3d927-cb9c-4ba3-a740-f2b1bb92f97b
+  broker:
+    exporters:
+      - jarPath: lib/zeebe-incident-alerter-1.0-SNAPSHOT.jar
+        className: io.camunda.zeebe.exporter.api.MyExporter
+        args:
+          url: https://webhook.site/0ba3d927-cb9c-4ba3-a740-f2b1bb92f97b
+      - className: io.camunda.zeebe.broker.exporter.debug.DebugLogExporter
+        args:
+          logLevel: debug
+          prettyPrint: false
 
 
 
 
+# zeebe:
+# broker:
+# gateway:
+# enable: true
+#
+# network:
+# host: 0.0.0.0
+#
+# port: 26500
+#
+# cluster:
+# requestTimeout: 15s
+#
+#    exporters:
+#     jarPath:lib/zeebe-incident-alerter-1.0-SNAPSHOT.jar
+#     className: io.camunda.zeebe.exporter.Exporter.api.MyExporter
+#  #
+#    debuglog:
+#    className: io.camunda.zeebe.broker.exporter.debug.DebugLogExporter
+#    args:
+#      logLevel: debug
+#      prettyPrint: false
+#
+#  # Debug HTTP Export ---------------
+#  #
+#  # Enable the following debug exporter to start a http server to inspect the exported records
+#  #
+#  # These setting can also be overridden using the environment variables "ZEEBE_BROKER_EXPORTERS_DEBUGHTTP_..."
+#  #
+#    debugHttp:
+#    className: io.camunda.zeebe.broker.exporter.debug.DebugHttpExporter
+#    args:
+#      port = 8000
+#      limit = 1024

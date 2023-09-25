@@ -1,4 +1,4 @@
-package io.zeebe;
+package io;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

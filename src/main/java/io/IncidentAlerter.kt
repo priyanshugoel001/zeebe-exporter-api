@@ -1,10 +1,4 @@
-package io.zeebe;
-
-//import io.zeebe.exporter.api.Exporter
-//import io.zeebe.exporter.api.context.Context
-//import io.zeebe.exporter.api.context.Controller
-//import io.zeebe.protocol.record.Record
-//import io.zeebe.protocol.record.intent.IncidentIntent
+package io;
 
 import RecordFilter
 import io.camunda.zeebe.exporter.api.Exporter
@@ -107,3 +101,4 @@ class IncidentAlerter: Exporter
         })
     }
 }
+
