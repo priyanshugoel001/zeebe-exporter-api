@@ -7,7 +7,6 @@ import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class MyExporter implements Exporter {
     private static final Logger log = LoggerFactory.getLogger(MyExporter.class);
     private Controller controller;
@@ -33,8 +32,8 @@ public class MyExporter implements Exporter {
 
     @Override
     public void open(Controller controller) {
-        log.info("inside open");
         this.controller=controller;
+        log.info("inside open");
         // Implement the logic to open the exporter
         // This method is called when the exporter is opened
     }
@@ -46,9 +45,11 @@ public class MyExporter implements Exporter {
         // This method is called when the exporter is closed
     }
 
+
     @Override
-    public void export(Record<?> record) {
+    public void export(Record record) {
         log.info("inside the export");
+        log.info("Record is "+record);
         try {
             if (record != null && record.getIntent() == IncidentIntent.CREATED) {
                 log.info(record.toString());
@@ -62,27 +63,24 @@ public class MyExporter implements Exporter {
                 this.controller.updateLastExportedRecordPosition(record.getPosition());
             }
         }
+        // Implement the logic to export records
+        // This method is called for each record to be exported
     }
-//    @Override
-//    public void export(Record record) {
-//        log.info("inside the export");
-//        try {
-//            if (record.getValueType() == IncidentIntent.CREATED) {
-//                log.info(record.toString())
-//                postIncident(record)
-//            }
-//        } catch (e: Throwable) {
-//            log.error("Error thrown by Incident Exporter!")
-//            e.printStackTrace()
-//        } finally {
-//            if (record != null) {
-//                this.controller.updateLastExportedRecordPosition(record.position)
-//            }
-//        }
-//        // Implement the logic to export records
-//        // This method is called for each record to be exported
-//    }
     private void postIncident(Record record) {
         log.info("inside the postIncident");
     }
 }
+//zeebe          |
+//        io.camunda.zeebe.exporter.api.MyExporter -
+//        Record is TypedRecordImpl{metadata=RecordMetadata{recordType=EVENT,
+//        valueType=PROCESS_INSTANCE, intent=ELEMENT_ACTIVATED},
+//        value={"bpmnElementType":"SERVICE_TASK","elementId":"Activity_1rxxh6n",
+//        "bpmnProcessId":"create-incident","version":3,
+//        "processDefinitionKey":2251799813685853,"processInstanceKey":2251799813692379,
+//        "flowScopeKey":2251799813692379,"bpmnEventType":"UNSPECIFIED",
+//        "parentProcessInstanceKey":-1,"parentElementInstanceKey":-1}}
+
+// ProcessInstanceKey
+// version
+// ProcessInstanceId
+
