@@ -45,29 +45,37 @@
     </bpmn:startEvent>
     <bpmn:endEvent id="EndEvent_1vrgpy6" name="End">
       <bpmn:incoming>Flow_0siqzqd</bpmn:incoming>
+      <bpmn:incoming>Flow_1cakma2</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="Activity_1xfg49d" name="userTask">
+    <bpmn:userTask id="user_task" name="userTask">
       <bpmn:extensionElements>
         <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_1sjlqpo" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0ufpcmm</bpmn:incoming>
       <bpmn:outgoing>Flow_0siqzqd</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_0ufpcmm" sourceRef="StartEvent_1" targetRef="Activity_1xfg49d" />
-    <bpmn:boundaryEvent id="Event_1p5mkm1" attachedToRef="Activity_1xfg49d">
+    <bpmn:sequenceFlow id="Flow_0ufpcmm" sourceRef="StartEvent_1" targetRef="user_task" />
+    <bpmn:boundaryEvent id="Event_1p5mkm1" attachedToRef="user_task">
       <bpmn:outgoing>Flow_0432nc7</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_0o19xsw">
         <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT1M</bpmn:timeDuration>
       </bpmn:timerEventDefinition>
     </bpmn:boundaryEvent>
-    <bpmn:serviceTask id="Activity_1rxxh6n" name="Escallate">
+    <bpmn:serviceTask id="escallate_service_task" name="Escallate">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="escalate_service_task" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0432nc7</bpmn:incoming>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_0432nc7" sourceRef="Event_1p5mkm1" targetRef="Activity_1rxxh6n" />
-    <bpmn:sequenceFlow id="Flow_0siqzqd" sourceRef="Activity_1xfg49d" targetRef="EndEvent_1vrgpy6" />
+    <bpmn:sequenceFlow id="Flow_0432nc7" sourceRef="Event_1p5mkm1" targetRef="escallate_service_task" />
+    <bpmn:sequenceFlow id="Flow_0siqzqd" sourceRef="user_task" targetRef="EndEvent_1vrgpy6" />
+    <bpmn:boundaryEvent id="Timer_after_escallation" attachedToRef="escallate_service_task">
+      <bpmn:outgoing>Flow_1cakma2</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_0we09wq">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT30S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1cakma2" sourceRef="Timer_after_escallation" targetRef="EndEvent_1vrgpy6" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="create-incident">
@@ -80,19 +88,22 @@
       <bpmndi:BPMNShape id="EndEvent_1vrgpy6_di" bpmnElement="EndEvent_1vrgpy6">
         <dc:Bounds x="562" y="99" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="570" y="142" width="20" height="14" />
+          <dc:Bounds x="570" y="75" width="20" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1xfg49d_di" bpmnElement="Activity_1xfg49d">
+      <bpmndi:BPMNShape id="Activity_1xfg49d_di" bpmnElement="user_task">
         <dc:Bounds x="320" y="77" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1rxxh6n_di" bpmnElement="Activity_1rxxh6n">
+      <bpmndi:BPMNShape id="Activity_1rxxh6n_di" bpmnElement="escallate_service_task">
         <dc:Bounds x="440" y="200" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1p5mkm1_di" bpmnElement="Event_1p5mkm1">
         <dc:Bounds x="352" y="139" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1og5x3d_di" bpmnElement="Timer_after_escallation">
+        <dc:Bounds x="522" y="222" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0ufpcmm_di" bpmnElement="Flow_0ufpcmm">
         <di:waypoint x="215" y="117" />
@@ -106,6 +117,11 @@
       <bpmndi:BPMNEdge id="Flow_0siqzqd_di" bpmnElement="Flow_0siqzqd">
         <di:waypoint x="420" y="117" />
         <di:waypoint x="562" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1cakma2_di" bpmnElement="Flow_1cakma2">
+        <di:waypoint x="558" y="240" />
+        <di:waypoint x="580" y="240" />
+        <di:waypoint x="580" y="135" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
